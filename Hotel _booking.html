@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 40px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 32px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        .form-group .inline {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .form-group .inline input {
+            margin-right: 5px;
+        }
+        .form-group .inline label {
+            margin-right: 10px;
+        }
+        .form-group.error label {
+            color: #e74c3c;
+        }
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #e74c3c;
+        }
+        .form-group.error .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        footer {
+            position: fixed; 
+            bottom: 0; 
+            right: 0; 
+            padding: 10px; 
+            background-color: #333;
+        }
+
+        footer a {
+            display: block; 
+        }
+
+        footer img {
+            width: 50px; 
+            height: auto; 
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector("form");
+            const fields = ["first-name", "last-name", "email", "phone", "check-in", "check-out", "room-type"];
+
+            function validateForm(event) {
+                event.preventDefault();
+                let isValid = true;
+
+                fields.forEach(field => {
+                    const input = document.getElementById(field);
+                    const formGroup = input.parentElement;
+                    const error = formGroup.querySelector(".error-message");
+
+                    if (input.value.trim() === "") {
+                        formGroup.classList.add("error");
+                        if (!error) {
+                            const errorMessage = document.createElement("div");
+                            errorMessage.className = "error-message";
+                            errorMessage.innerText = "This field is required.";
+                            formGroup.appendChild(errorMessage);
+                        }
+                        isValid = false;
+                    } else {
+                        formGroup.classList.remove("error");
+                        if (error) {
+                            error.remove();
+                        }
+                    }
+                });
+
+                if (!validateEmail(document.getElementById("email").value)) {
+                    const emailGroup = document.getElementById("email").parentElement;
+                    emailGroup.classList.add("error");
+                    let error = emailGroup.querySelector(".error-message");
+                    if (!error) {
+                        const errorMessage = document.createElement("div");
+                        errorMessage.className = "error-message";
+                        errorMessage.innerText = "Please enter a valid email address.";
+                        emailGroup.appendChild(errorMessage);
+                    }
+                    isValid = false;
+                }
+
+                if (!validatePhone(document.getElementById("phone").value)) {
+                    const phoneGroup = document.getElementById("phone").parentElement;
+                    phoneGroup.classList.add("error");
+                    let error = phoneGroup.querySelector(".error-message");
+                    if (!error) {
+                        const errorMessage = document.createElement("div");
+                        errorMessage.className = "error-message";
+                        errorMessage.innerText = "Please enter a valid 10-digit phone number.";
+                        phoneGroup.appendChild(errorMessage);
+                    }
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    form.submit();
+                }
+            }
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            function validatePhone(phone) {
+                const re = /^\d{10}$/;
+                return re.test(String(phone));
+            }
+
+            form.addEventListener("submit", validateForm);
+        });
+        
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Hotel Booking Form</h1>
+    </header>
+    <main>
+        <form action="/submit_booking" method="post">
+            <div class="form-group">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" name="first_name" required>
+            </div>
+            <div class="form-group">
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" name="last_name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="check-in">Check-In Date</label>
+                <input type="date" id="check-in" name="check_in" required>
+            </div>
+            <div class="form-group">
+                <label for="check-out">Check-Out Date</label>
+                <input type="date" id="check-out" name="check_out" required>
+            </div>
+            <div class="form-group">
+                <label for="room-type">Room Type</label>
+                <select id="room-type" name="room_type" required>
+                    <option value="">Select a room type</option>
+                    <option value="single">Single</option>
+                    <option value="double">Double</option>
+                    <option value="suite">Suite</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="requests">Special Requests</label>
+                <textarea id="requests" name="requests" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn">Book Now</button>
+        </form>
+    </main>
+    <footer>
+        <a href="index.html">
+                <img src="pics/home.png" alt="home">
+                
+        </a>
+    </footer>
+    
+</body>
+</html>
